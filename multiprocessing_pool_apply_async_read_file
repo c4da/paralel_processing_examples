@@ -1,0 +1,33 @@
+"""
+code should paralelize reading a txt file line by line
+"""
+
+import re
+from time import time
+import multiprocessing as mp
+
+def process(line):
+	re.findall('\s+ELEMENT\s+', line)
+
+print('core numbers: ', mp.cpu_count())
+
+t1 = time()
+pool = mp.Pool(4)
+jobs = []
+
+fileName = 'testfile.txt'
+
+ #create jobs
+with open(fileName) as f:
+ 	for line in f:
+		jobs.append(pool.apply_async(process, args = (line,)))
+ 
+ #wait for all jobs to finish
+for job in jobs:
+ 	job.get()
+
+#clean up
+pool.close()
+
+t2 = time()
+print(t2-t1)
